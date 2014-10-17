@@ -32,7 +32,13 @@ void addLine(render::Renderer &renderer, Vec3 p1, Vec3 p2, Vec3 color)
 	renderables.push_back(std::shared_ptr<Renderable>(line));
 }
 
-Renderable gline1;
+void addPoint(render::Renderer &renderer, Vec3 p, Vec3 color)
+{
+	Renderable *point = new Renderable;
+
+	point->addVertex(p).addColor(color.x, color.y, color.z).asPoint();
+	renderables.push_back(std::shared_ptr<Renderable>(point));
+}
 
 void triangleIntersectionTest( render::Renderer &renderer, Vec3 &v1, Vec3 &v2, Vec3 &v3 )
 {
@@ -42,14 +48,18 @@ void triangleIntersectionTest( render::Renderer &renderer, Vec3 &v1, Vec3 &v2, V
 	Vec3 n 		= v12.cross(v13);
 
 	Vec3 p12	= p2 - p1;
-	Vec3 p1_v1	= v1 - p1;
+	Vec3 pv		= v1 - p1;
 
-	Vec3 p1_projection = p1 + p12 * (n.dot(p1_v1) / n.dot(p12));
+	Vec3 p1_prj = p1 + p12 * (n.dot(pv) / n.dot(p12));
 
 	addLine(renderer, p1, p2, Vec3(1,0,0));
-	addLine(renderer, p1, p1_projection, Vec3(1,1,0));
+	addPoint(renderer, p1_prj, Vec3(1,1,1));
 
+}
 
+void update()
+{
+	renderables.back().get()->move(0.001,0.001,0.001);
 }
 
 int main(int argc, char **argv)
@@ -115,6 +125,8 @@ int main(int argc, char **argv)
 
 		shaderManager.getDefaultShader()->setUniformMatrix4( "MVP", camera.getViewMatrix().ref() );
 		shaderManager.getDefaultShader()->setUniformMatrix4( "MV", camera.getModelview().ref() );
+
+		update();
 
 		renderer.update();
 

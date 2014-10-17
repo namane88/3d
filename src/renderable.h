@@ -11,12 +11,14 @@ class Renderable
 		GLuint vao;
 		
 		std::vector<float> vertices, normals, texCoords, colors;
+		std::vector<GLuint> vbos;
 
 		GLenum mode;
 	
 	public:
 		Renderable();
 		Renderable(std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& textureCoords);
+		virtual ~Renderable();
 	
 		GLuint setBuffer(GLuint index, std::vector<float>& data, unsigned components);
 
@@ -26,7 +28,7 @@ class Renderable
 
 		Renderable& addColor(float, float, float);
 
-		virtual ~Renderable();
+		bool isPrepared();
 
 		void prepare();
 
@@ -35,6 +37,8 @@ class Renderable
 		void asLine(){ setMode(GL_LINES); }
 		void asTriangle(){ setMode(GL_TRIANGLES); }
 		void asPoint(){ setMode(GL_POINTS); }
+
+		void move(float, float, float);
 
 		Renderable& addVertex(const math::Vec3 &v) { return addVertex(v.x, v.y, v.z);  }
 		Renderable& addColor(const math::Vec3 &v) { return addVertex(v.x, v.y, v.z);  }
