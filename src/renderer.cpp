@@ -5,6 +5,9 @@ namespace render
 	Renderer::Renderer()
 	{
 		glEnable(GL_DEPTH_TEST);
+
+		glPointSize(4.0);
+		glLineWidth(3.0);
 	}
 
 	void Renderer::clearScreen()

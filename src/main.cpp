@@ -24,20 +24,28 @@ using namespace math;
 
 std::vector<std::shared_ptr<Renderable>> renderables;
 
-void addLine(render::Renderer &renderer, Vec3 p1, Vec3 p2, Vec3 color)
+void renderLine(render::Renderer &renderer, Vec3 p1, Vec3 p2, Vec3 color)
 {
 	Renderable *line = new Renderable;
 
-	line->addVertex(p1).addVertex(p2).addColor(color.x, color.y, color.z).addColor(color.x, color.y, color.z).asLine();
+	line->addVertex(p1).addVertex(p2).addColor(color).addColor(color).asLine();
 	renderables.push_back(std::shared_ptr<Renderable>(line));
 }
 
-void addPoint(render::Renderer &renderer, Vec3 p, Vec3 color)
+void renderPoint(render::Renderer &renderer, Vec3 p, Vec3 color)
 {
 	Renderable *point = new Renderable;
 
-	point->addVertex(p).addColor(color.x, color.y, color.z).asPoint();
+	point->addVertex(p).addColor(color).asPoint();
 	renderables.push_back(std::shared_ptr<Renderable>(point));
+}
+
+void renderTriangle(render::Renderer &renderer, Vec3 p1, Vec3 p2, Vec3 p3, Vec3 color1, Vec3 color2, Vec3 color3)
+{
+	Renderable *triangle = new Renderable;
+
+	triangle->addVertex(p1).addVertex(p2).addVertex(p3).addColor(color1).addColor(color2).addColor(color3).asTriangle();
+	renderables.push_back(std::shared_ptr<Renderable>(triangle));
 }
 
 void triangleIntersectionTest( render::Renderer &renderer, Vec3 &v1, Vec3 &v2, Vec3 &v3 )
@@ -52,8 +60,8 @@ void triangleIntersectionTest( render::Renderer &renderer, Vec3 &v1, Vec3 &v2, V
 
 	Vec3 p1_prj = p1 + p12 * (n.dot(pv) / n.dot(p12));
 
-	addLine(renderer, p1, p2, Vec3(1,0,0));
-	addPoint(renderer, p1_prj, Vec3(1,1,1));
+	renderLine(renderer, p1, p2, Vec3(1,0,0));
+	renderPoint(renderer, p1_prj, Vec3(1,1,1));
 
 }
 
@@ -87,22 +95,15 @@ int main(int argc, char **argv)
 
 	shaderManager.fromFile("color.vert", "color.frag")->use();
 
-	glPointSize(5.0);
-	glLineWidth(2.0);
-
 	Vec3 v1(-2, 0, 0), v2(+5, 0, 0.5), v3(0, +1, 0);
 
-	Renderable triangle;
-	Renderable line1, line2, line3;
-
-	triangle.addVertex(v1).addVertex(v2).addVertex(v3).addColor(1,0,0).addColor(0,1,0).addColor(0,0,1).asTriangle();
+	renderTriangle(renderer, v1, v2, v3, Vec3(1,0,0), Vec3(0,1,0), Vec3(0,0,1));
 
 	triangleIntersectionTest(renderer, v1, v2, v3);
 
-	renderer.addRenderable(&triangle);
-
-	for(std::shared_ptr<Renderable> r : renderables)
+	for(std::shared_ptr<Renderable> r : renderables) {
 		renderer.addRenderable(r.get());
+	}
 
 
 	while(1)

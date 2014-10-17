@@ -1,7 +1,8 @@
 #include "renderable.h"
 
 
-Renderable::Renderable() : vao(0), mode(GL_TRIANGLES) {}
+Renderable::Renderable() : vao(0), mode(GL_TRIANGLES) {
+}
 
 Renderable::~Renderable() {
 	if (vao)

@@ -5,6 +5,8 @@
 #include<GL/glew.h>
 #include "math/vec3.h"
 
+#include <iostream>
+
 class Renderable
 {
 	private:
@@ -41,7 +43,7 @@ class Renderable
 		void move(float, float, float);
 
 		Renderable& addVertex(const math::Vec3 &v) { return addVertex(v.x, v.y, v.z);  }
-		Renderable& addColor(const math::Vec3 &v) { return addVertex(v.x, v.y, v.z);  }
+		Renderable& addColor(const math::Vec3 &v) { return addColor(v.x, v.y, v.z);  }
 };
 
 #endif
