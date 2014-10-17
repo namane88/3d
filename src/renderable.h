@@ -23,6 +23,7 @@ class Renderable
 		virtual ~Renderable();
 	
 		GLuint setBuffer(GLuint index, std::vector<float>& data, unsigned components);
+		void updateBuffer(GLuint index, std::vector<float>& data);
 
 		Renderable& setMode(GLenum);
 

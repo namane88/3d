@@ -67,6 +67,17 @@ GLuint Renderable::setBuffer(GLuint index, std::vector<float>& data, unsigned co
 	return bufferId;
 }
 
+void Renderable::updateBuffer(GLuint index, std::vector<float>& data)
+{
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbos[index]);
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 
 void Renderable::prepare()
 {
@@ -107,9 +118,5 @@ void Renderable::move(float x, float y, float z)
 		vertices[i+2] += z;
 	}
 
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	updateBuffer(0, vertices);
 }
