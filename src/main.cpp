@@ -6,16 +6,9 @@
 #include "renderer.h"
 #include "model_loader.h"
 #include "renderable.h"
-#include "math/mat4.h"
 #include "camera.h"
 #include "shader_manager.h"
-
-#include <fstream>
-#include <stdexcept>
-#include <string>
 #include <time.h>
-#include <vector>
-#include <memory>
 
 #include "App.h"
 
@@ -75,10 +68,10 @@ int main(int argc, char **argv)
 	shaderManager.fromFile("color.vert", "color_light.frag")->use();
 	shaderManager.fromFile("color.vert", "color.frag");
 
-	ModelLoader model("res/models/M4A1/M4A1_tri.obj");
-	Renderable map(model.getVertices(), model.getNormals(), model.getTexCoords());
-	app.getRenderer()->addRenderable(& map);
+	ModelLoader loader("res/models/M4A1/M4A1_tri.obj");
+	Renderable map(loader.getVertices(), loader.getNormals(), loader.getTexCoords());
 
+	app.getRenderer()->addRenderable(& map);
 	app.getRenderer()->printRenderInfo();
 
 	while( app.isRunning() )
