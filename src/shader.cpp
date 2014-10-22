@@ -11,10 +11,8 @@ namespace gl
 		this->initialize(vertexSource, fragmentSource);
 	}
 
-	Shader::~Shader()
-	{
-		if (glIsProgram(id))
-			glDeleteProgram(id);
+	Shader::~Shader() {
+		if (glIsProgram(id)) glDeleteProgram(id);
 	}
 
 
@@ -54,11 +52,10 @@ namespace gl
 		return sid;
 	}
 
-
 	void Shader::checkShader(GLuint sid, const std::string& type)
 	{
 		std::string err;
-		GLsizei size = 64*2;
+		GLsizei size = 64*3;
 		char buffer[size];
 
 		type == "program" ? 
@@ -77,29 +74,23 @@ namespace gl
 		}
 	}
 
-
-	void Shader::use()
-	{
+	void Shader::use() {
 		glUseProgram(id);
 	}
 
-	GLint Shader::getAttribLocation(const char *name)
-	{
+	GLint Shader::getAttribLocation(const char *name) {
 		return glGetAttribLocation(id, name);
 	}
 
-	GLint Shader::getUniformLocation(const char *name)
-	{
+	GLint Shader::getUniformLocation(const char *name){
 		return glGetUniformLocation(id, name);
 	}
 
-	
 	void Shader::setUniformMatrix4( const char *name, float *value) {
 		glUniformMatrix4fv( getUniformLocation(name), 1, GL_FALSE, value); 
 	}
 
-	GLuint Shader::getId()
-	{
+	GLuint Shader::getId() {
 		return id;
 	}
 }

@@ -1,4 +1,3 @@
-
 #ifndef SRC_APP_H_
 #define SRC_APP_H_
 
@@ -6,11 +5,10 @@
 #include "keyboard.h"
 #include "mouse.h"
 #include "renderer.h"
-
+#include "camera.h"
 #include "frame/frameinfo.h"
 #include "input_event.h"
 
-#include "camera.h"
 
 using namespace display;
 using namespace device;
@@ -23,9 +21,10 @@ class App {
 	Mouse *mouse;
 	Renderer *renderer;
 	Camera *camera;
-
 	FrameInfo frame;
 	InputEvent inputEventManager;
+
+	bool running;
 
 public:
 	App();
@@ -48,7 +47,11 @@ public:
 
 	void onFrameStart();
 
+	void onFrameRender();
+
 	void onFrameEnd();
+
+	bool isRunning();
 };
 
 #endif

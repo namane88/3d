@@ -71,8 +71,6 @@ int main(int argc, char **argv)
 	Camera camera(60.0, (float) WIN_WIDTH / (float) WIN_HEIGHT, 0.01, 1000.0);
 	app.setCamera(&camera);
 
-	app.getRenderer()->printRenderInfo();
-
 	ShaderManager shaderManager;
 	shaderManager.fromFile("color.vert", "color_light.frag")->use();
 	shaderManager.fromFile("color.vert", "color.frag");
@@ -81,16 +79,18 @@ int main(int argc, char **argv)
 	Renderable map(model.getVertices(), model.getNormals(), model.getTexCoords());
 	app.getRenderer()->addRenderable(& map);
 
-	while(1)
+	app.getRenderer()->printRenderInfo();
+
+	while( app.isRunning() )
 	{
 		app.onFrameStart();
 
-		if (keyboard.isKeyDown('q')) break;
-
 		update(app);
 
-		shaderManager.getDefaultShader()->setUniformMatrix4( "MVP", camera.getViewMatrix().ref() );
-		shaderManager.getDefaultShader()->setUniformMatrix4( "MV", camera.getModelview().ref() );
+		shaderManager.setUniformMatrix4("MVP", camera.getViewMatrix().ref());
+		shaderManager.setUniformMatrix4("MV", camera.getModelview().ref());
+
+		app.onFrameRender();
 
 		app.onFrameEnd();
 	}

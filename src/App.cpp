@@ -1,8 +1,7 @@
 #include "App.h"
 
-App::App() : window(nullptr), keyboard(nullptr), mouse(nullptr), renderer(nullptr) {
-
-}
+App::App() : window(nullptr), keyboard(nullptr), mouse(nullptr),
+renderer(nullptr), camera(nullptr), running(true) {}
 
 void App::setWindow(Window* window) {
 	this->window = window;
@@ -64,18 +63,24 @@ void App::onFrameStart() {
 
 	this->mouse->reset();
 	this->inputEventManager.update();
+
+	running = ! this->keyboard->isKeyDown('q');
+}
+
+void App::onFrameRender() {
+	renderer->update();
+	renderer->render();
 }
 
 void App::onFrameEnd() {
-
-	this->renderer->update();
-	this->renderer->render();
-
 	this->window->swap();
 
 	frame.onEnd();
 }
 
+bool App::isRunning() {
+	return running;
+}
 
 App::~App() {
 }

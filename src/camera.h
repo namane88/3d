@@ -11,7 +11,7 @@ class Camera
 		math::Vec3 direction;
 		math::Vec3 up;
 
-		math::Mat4 perspective, modelview;
+		math::Mat4 perspective, modelview, mvp;
 
 		float fov;
 		float aspect;
@@ -25,8 +25,9 @@ class Camera
 		~Camera();
 
 
-		math::Mat4 getViewMatrix();
+		math::Mat4 &getViewMatrix();
 		math::Mat4 &getModelview();
+		math::Mat4 &getPerspectiveMatrix();
 		
 		void resetPerspectiveMatrix();
 

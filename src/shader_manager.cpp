@@ -46,3 +46,10 @@ void ShaderManager::setDefaultShader(Shader *shader)
 {
 	defaultShader = shader;
 }
+
+void ShaderManager::setUniformMatrix4(const char *name, float *data)
+{
+	for(Shader *shader : shaders) {
+		shader->setUniformMatrix4(name, data);
+	}
+}

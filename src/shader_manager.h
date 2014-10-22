@@ -29,6 +29,8 @@ class ShaderManager
 		void addShader(Shader *shader);
 
 		void setDefaultShader(Shader *shader);
+
+		void setUniformMatrix4(const char*, float *);
 };
 
 #endif

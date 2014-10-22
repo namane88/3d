@@ -15,7 +15,12 @@ math::Mat4 &Camera::getModelview()
 	return modelview;
 }
 
-math::Mat4 Camera::getViewMatrix()
+math::Mat4 &Camera::getPerspectiveMatrix()
+{
+	return perspective;
+}
+
+math::Mat4 &Camera::getViewMatrix()
 {
 	math::Vec3 f = direction;
 	f.normalize();
@@ -39,7 +44,9 @@ math::Mat4 Camera::getViewMatrix()
 	modelview[3 * 4 + 1]  = - u.dot(location);
 	modelview[3 * 4 + 2]  = + f.dot(location);
 	
-	return modelview * perspective;
+	mvp = modelview * perspective;
+
+	return mvp;
 }
 
 void Camera::resetPerspectiveMatrix()
