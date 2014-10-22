@@ -71,21 +71,15 @@ int main(int argc, char **argv)
 	Camera camera(60.0, (float) WIN_WIDTH / (float) WIN_HEIGHT, 0.01, 1000.0);
 	app.setCamera(&camera);
 
-	ShaderManager shaderManager;
-
 	app.getRenderer()->printRenderInfo();
 
+	ShaderManager shaderManager;
 	shaderManager.fromFile("color.vert", "color_light.frag")->use();
 	shaderManager.fromFile("color.vert", "color.frag");
 
 	ModelLoader model("res/models/M4A1/M4A1_tri.obj");
-
 	Renderable map(model.getVertices(), model.getNormals(), model.getTexCoords());
-
 	app.getRenderer()->addRenderable(& map);
-
-
-	FrameInfo &frame = app.getFrameInfo();
 
 	while(1)
 	{
