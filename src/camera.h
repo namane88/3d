@@ -18,6 +18,8 @@ class Camera
 		float zNear, zFar;
 		float pitch, yaw;
 
+		float movementSpeed;
+
 	public:
 		Camera(float, float, float, float);
 		~Camera();
@@ -38,6 +40,8 @@ class Camera
 		void back();
 		void left();
 		void right();
+
+		void setMovementSpeed(float speed) { movementSpeed = speed; }
 
 		void setDirectionFromScreen(int, int);
 };

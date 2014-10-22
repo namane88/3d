@@ -3,6 +3,8 @@
 Camera::Camera(float _fov, float _aspect, float _zNear, float _zFar)
 	: fov(_fov), aspect(_aspect), zNear(_zNear), zFar(_zFar), pitch(0.0), yaw(0.0), up(0, 1, 0), modelview(1) 
 {
+	movementSpeed = 0.5;
+
 	resetPerspectiveMatrix();
 }
 
@@ -76,19 +78,19 @@ const math::Vec3& Camera::getLocation() {
 }
 
 void Camera::forward() {
-	location += direction * 0.05;
+	location += direction * movementSpeed;
 }
 
 void Camera::back() {
-	location -= direction * 0.05;
+	location -= direction * movementSpeed;
 }
 
 void Camera::left() {
-	location -= direction.cross(up) * 0.05;
+	location -= direction.cross(up) * movementSpeed;
 }
 
 void Camera::right() {
-	location += direction.cross(up) * 0.05;
+	location += direction.cross(up) * movementSpeed;
 }
 
 void Camera::setDirectionFromScreen(int xrel, int yrel)
