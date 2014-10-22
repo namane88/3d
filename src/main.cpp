@@ -17,7 +17,7 @@
 #include <vector>
 #include <memory>
 
-#include "frame/frameinfo.h"
+#include "App.h"
 
 using namespace math;
 
@@ -25,9 +25,28 @@ using namespace math;
 #define WIN_HEIGHT 900
 
 
-void update()
+void update(App &app)
 {
+	device::Keyboard &keyboard = * app.getKeyboard();
+	device::Mouse &mouse = * app.getMouse();
+	Camera &camera = * app.getCamera();
 
+	camera.setMovementSpeed(app.getFrameInfo().getFrameDelta() * 10.0f);
+
+	if (mouse.hasMotion()) {
+		camera.setDirectionFromScreen(mouse.getXRel(), mouse.getYRel());
+	}
+
+	if (keyboard.isKeyDown('w')) camera.forward();
+	if (keyboard.isKeyDown('a')) camera.left();
+	if (keyboard.isKeyDown('s')) camera.back();
+	if (keyboard.isKeyDown('d')) camera.right();
+
+	if (keyboard.isKeyDown('p'))
+	{
+		app.getRenderer()->togglePolygonMode();
+		keyboard.onKeyUp('p');
+	}
 }
 
 int main(int argc, char **argv)
@@ -35,66 +54,50 @@ int main(int argc, char **argv)
 
 	srand(time(0));
 
+	App app;
+
 	display::Window window("OpenGL", 1500, 800);
+	app.setWindow(&window);
+
 	device::Keyboard keyboard;
+	app.setKeyboard(&keyboard);
+
 	device::Mouse mouse;
+	app.setMouse(&mouse);
+
 	render::Renderer renderer;
-	InputEvent event;
-	ShaderManager shaderManager;
-
-	mouse.setRelative(true);
-	mouse.setVisibility(true);
-
-	event.listen(keyboard);
-	event.listen(mouse);
+	app.setRenderer(&renderer);
 
 	Camera camera(60.0, (float) WIN_WIDTH / (float) WIN_HEIGHT, 0.01, 1000.0);
-	camera.setLocation(0, 0, -2);
+	app.setCamera(&camera);
 
-	renderer.printRenderInfo();
+	ShaderManager shaderManager;
+
+	app.getRenderer()->printRenderInfo();
 
 	shaderManager.fromFile("color.vert", "color_light.frag")->use();
+	shaderManager.fromFile("color.vert", "color.frag");
 
 	ModelLoader model("res/models/M4A1/M4A1_tri.obj");
 
 	Renderable map(model.getVertices(), model.getNormals(), model.getTexCoords());
 
-	renderer.addRenderable(&map);
+	app.getRenderer()->addRenderable(& map);
 
 
-	FrameInfo frame;
+	FrameInfo &frame = app.getFrameInfo();
 
 	while(1)
 	{
+		app.onFrameStart();
 
-		frame.onStart();
+		if (keyboard.isKeyDown('q')) break;
 
-		mouse.reset();
-		event.update();
-
-		if (keyboard.isKeyDown('q')) 
-			break;
-
-		camera.setMovementSpeed(frame.getFrameDelta() * 10.0f);
-
-		if (mouse.hasMotion()) {
-			camera.setDirectionFromScreen(mouse.getXRel(), mouse.getYRel());
-		}
-	
-		if (keyboard.isKeyDown('w')) camera.forward();
-		if (keyboard.isKeyDown('a')) camera.left();
-		if (keyboard.isKeyDown('s')) camera.back();
-		if (keyboard.isKeyDown('d')) camera.right();
+		update(app);
 
 		shaderManager.getDefaultShader()->setUniformMatrix4( "MVP", camera.getViewMatrix().ref() );
 		shaderManager.getDefaultShader()->setUniformMatrix4( "MV", camera.getModelview().ref() );
 
-		update();
-		renderer.update();
-		renderer.render();
-
-		window.swap();
-
-		frame.onEnd();
+		app.onFrameEnd();
 	}
 }

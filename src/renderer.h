@@ -28,6 +28,8 @@ namespace render
 			void clearScreen();
 
 			void printRenderInfo();
+
+			void togglePolygonMode();
 	};
 }
 

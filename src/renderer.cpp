@@ -22,6 +22,14 @@ namespace render
 		queue.push_back(element);
 	}
 
+	void Renderer::togglePolygonMode() {
+		GLint mode;
+
+		glGetIntegerv(GL_POLYGON_MODE, &mode);
+
+		glPolygonMode( GL_FRONT_AND_BACK, mode == GL_FILL ? GL_LINE : GL_FILL );
+	}
+
 	
 	void Renderer::update()
 	{
